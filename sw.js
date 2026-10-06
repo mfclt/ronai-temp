@@ -1,5 +1,5 @@
-const CACHE='temperature-log-v1.0.0';
-const ASSETS=['./','./index.html','./style.css','./app.js','./core.js','./xlsx.js','./vendor/jszip.min.js','./icon.svg','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
+const CACHE='temperature-log-v1.1.0';
+const ASSETS=['./','./index.html','./style.css','./app.js','./core.js','./presets.js','./xlsx.js','./vendor/jszip.min.js','./icon.svg','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('temperature-log-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).origin!==location.origin)return;const relative=new URL(e.request.url).pathname.slice(new URL(self.registration.scope).pathname.length);if(relative&&!ASSETS.includes('./'+relative))return;e.respondWith(fetch(e.request).then(response=>{if(response.ok){const copy=response.clone();e.waitUntil(caches.open(CACHE).then(c=>c.put(e.request,copy)));}return response;}).catch(()=>caches.match(e.request)));});
