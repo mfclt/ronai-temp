@@ -1,4 +1,4 @@
-const CACHE='temperature-log-v1.3.0';
+const CACHE='temperature-log-v1.4.0';
 const ASSETS=['./','./index.html','./style.css','./app.js','./core.js','./presets.js','./xlsx.js','./vendor/jszip.min.js','./icon.svg','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('temperature-log-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

@@ -11,3 +11,13 @@ const wf=C.fitSegments([white,white],cfg);assert(wf.segmentConfirmed[0][5]);asse
 const uniform={...flat,data:new Uint8ClampedArray(flat.data.length).fill(230)};
 assert(C.luminanceMask(uniform).mask.every(v=>!v),'uniform bright panel is not a lit segment');
 console.log('White lower-right and uniform bright background: PASS');
+
+const known=[true,true,true,true,false,true,true];
+const rates=p=>[...p].map(v=>v==='1'?.9:.02);
+assert.equal(C.decodeSegments(rates('0010010'),known,.3).text,'1');
+assert.equal(C.decodeSegments(rates('0111010'),known,.3).text,'4');
+for(const p of ['1101011','1101111','1111111','1111011'])assert.equal(C.decodeSegments(rates(p),known,.3).text,'?','5/6 and 8/9 must remain ambiguous');
+assert.equal(C.decodeSegments(rates('1111111'),Array(7).fill(false),.3).text,'?');
+assert.equal(C.decodeSegments([.9,.9,.02,.9,.02,.31,.9],known,.3).weak,true);
+assert.equal(C.decodeSegments(rates('1101011'),Array(7).fill(true),.3).text,'5');
+console.log('Unknown segment 5: unique, ambiguous, all unknown, low confidence: PASS');
